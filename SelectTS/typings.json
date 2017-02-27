@@ -1,0 +1,7 @@
+{
+  "globalDependencies": {
+    "collections2": "file:./lib/typings/collections2/index.d.ts",
+    "rtcP2P": "file:./lib/typings/rtc/RTCPeerConnection.d.ts",
+    "node": "registry:dt/node#7.0.0+20170204020307"
+  }
+}

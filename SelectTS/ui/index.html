@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../dist/selectDemo.js" />
+
+</head>
+
+<body>
+<script>
+
+
+    function getParameterByName(searchIn, name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+        var results = regex.exec(searchIn);
+        return results === null ? null : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+    var selectClient = new SelectClient(socialId);
+    var socialId = getParameterByName(location.search, "socialId");
+    selectClient.start();
+</script>
+</body>
+</html>
