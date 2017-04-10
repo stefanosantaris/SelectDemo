@@ -1,9 +1,11 @@
 'use strict';
+var socket = require('socket.io-client')('http://192.168.1.226:3033')
+var webrtc = require('wrtc')
+var Q = require('q');
 
 /****************************************************************************
  * Initial setup
  ****************************************************************************/
-
 
 
 var configuration = null;
@@ -22,7 +24,7 @@ var clientList = [];
  ****************************************************************************/
 
 // Connect to the signaling server
-var socket = io.connect();
+// var socket = io.connect();
 
 socket.on('ipaddr', function (ipaddr) {
     // console.log('Server IP address is: ' + ipaddr);
@@ -43,7 +45,7 @@ socket.on('joined', function (room, clientId, leaderId) {
 });
 
 socket.on('full', function (room) {
-    alert('Room ' + room + ' is full. We will create a new room for you.');
+    // alert('Room ' + room + ' is full. We will create a new room for you.');
     window.location.hash = '';
     window.location.reload();
 });
@@ -66,9 +68,9 @@ socket.on('message', function (message, clientId) {
 // Join a room
 socket.emit('create or join');
 
-if (location.hostname.match(/localhost|127\.0\.0/)) {
-    socket.emit('ipaddr');
-}
+// if (location.hostname.match(/localhost|127\.0\.0/)) {
+//     socket.emit('ipaddr');
+// }
 
 /**
  * Send message to signaling server
@@ -91,7 +93,7 @@ var counter = 0;
 function signalingMessageCallback(message, clientId) {
     if (message.type === 'offer') {
         // console.log('Got offer. Sending answer to peer.');
-        peerConn[clientId].setRemoteDescription(new RTCSessionDescription(message), function () {
+        peerConn[clientId].setRemoteDescription(new webrtc.RTCSessionDescription(message), function () {
             },
             logError);
         peerConn[clientId].createAnswer().then(function (desc) {
@@ -100,12 +102,12 @@ function signalingMessageCallback(message, clientId) {
 
     } else if (message.type === 'answer') {
         // console.log('Got answer.');
-        peerConn[clientId].setRemoteDescription(new RTCSessionDescription(message), function () {
+        peerConn[clientId].setRemoteDescription(new webrtc.RTCSessionDescription(message), function () {
             },
             logError);
 
     } else if (message.type === 'candidate') {
-        peerConn[clientId].addIceCandidate(new RTCIceCandidate({
+        peerConn[clientId].addIceCandidate(new webrtc.RTCIceCandidate({
             candidate: message.candidate
         }));
 
@@ -117,7 +119,7 @@ function signalingMessageCallback(message, clientId) {
 function createPeerConnection(isInitiator, config, clientId) {
     // console.log('Creating Peer connection as initiator?', isInitiator, 'config:',
     //     config);
-    var pc = new RTCPeerConnection(config);
+    var pc = new webrtc.RTCPeerConnection(config);
     peerConn[clientId] = pc;
     avgFragmentTime[clientId] = new Array();
 
